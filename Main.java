@@ -12,7 +12,7 @@ public class Main{
         //variables 
         File schedule = new File("train_schedule.txt");
         Scanner scnr = new Scanner(schedule);
-        double PerbyTruck = 0.75;
+        double PerbyTruck = 0.5;
         double PerbyDrone = 1 - PerbyTruck;
         int truckNums = 0;
         int truckStopped =0;
