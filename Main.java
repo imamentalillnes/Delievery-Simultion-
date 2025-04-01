@@ -1,3 +1,9 @@
+/*
+ * in my Testing of this program I have found that the percentage that works the best to give the lowest time for deliveries is 52% done by Trucks and 48% done by drones.
+ * this results in 78 trucks being used and 720 drones being used with a time of 2217 mins for all packages to be deilevered.
+ */
+
+
 import java.io.*;
 import java.nio.channels.Pipe.SourceChannel;
 import java.util.*;
@@ -12,7 +18,7 @@ public class Main{
         //variables 
         File schedule = new File("train_schedule.txt");
         Scanner scnr = new Scanner(schedule);
-        double PerbyTruck = 0.5;
+        double PerbyTruck = 0.52;
         double PerbyDrone = 1 - PerbyTruck;
         int truckNums = 0;
         int truckStopped =0;
