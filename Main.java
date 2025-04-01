@@ -3,6 +3,8 @@ import java.util.*;
 
 public class Main{
 
+    static ArrayList<Truck> compTrucks = new ArrayList<>();
+
     public static void main(String[] args) throws FileNotFoundException{
         
         //variables 
@@ -12,30 +14,31 @@ public class Main{
         int truckStopped =0;
         int timer = 0;
         int packages = 0;
+        int prePackages = 0;
         int trainsCrossing = 0;
         boolean trainpassing = false;
         boolean trucksDone = false;
-        ArrayList<Truck> compTrucks = new ArrayList<>();
         ArrayList<Truck> stoppedTrucks = new ArrayList<>();
         // Creates train schedule
         ArrayList<Integer> trainSch = TrainSchedule(scnr);
+        scnr.close();
 
         //main loop
-        while(packages < 1500 || trucksDone){
+        while(packages < 1500){
 
             // checks if the timer is divisible by 15
-            if(timer % 15 == 0 && packages < 1500){
+            if(timer % 15 == 0 && prePackages < 1500){
                 // makes new truck
                 compTrucks.add(new Truck(truckNums, timer));
                 truckNums++;
-                packages += 10;
+                prePackages += 10;
             }
 
             // checks each truck to see when they pass the crossing
             for(Truck a : compTrucks){
                 if(timer == a.getPassing()){
                     //checks if the train is passing
-                    if(trainpassing){
+                    if(trainpassing || !stoppedTrucks.isEmpty()){
                         a.setStopped(timer);
                         stoppedTrucks.add(a);
                     }
@@ -53,6 +56,7 @@ public class Main{
             for(Truck a : compTrucks){
                 if(a.getTimeDone() == timer){
                     a.setFinished();
+                    packages += 10;
                 }
             }
 
@@ -86,6 +90,12 @@ public class Main{
             timer++;
         }
 
+        // prints the stats of each truck
+        System.out.println();
+        System.out.println("TRUCK STATS:");
+        for(Truck a : compTrucks){
+            System.out.println(a.toString());
+        }
     }
 
     // Creates a Schedule of all the times the train comes and goes

@@ -9,6 +9,7 @@ public class Truck {
     private int timeDone = 0;
     private int passCrossing = 0;
     private int trainStart = 0;
+    private int timeTaken = 0;
 
     public Truck(){
         //does nothing
@@ -21,7 +22,7 @@ public class Truck {
         timeStart = start;
         passCrossing = start + (3000/30);
         timeDone = start + (30000/30);
-        System.out.println("TRUCK #" + truckNum + " begins journey");
+        System.out.println(start + ": TRUCK #" + truckNum + " begins journey");
     }
     
     // sets the stop
@@ -68,6 +69,11 @@ public class Truck {
 
     // gives the total time the truck took to delievery the package
     public int totalTime(){
-        return timeDone;
+        return timeDone - timeStart;
+    }
+
+    @Override
+    public String toString(){
+        return "TRUCK #" + truckNum + " total trip time: " + totalTime() + " minutes.";
     }
 }
