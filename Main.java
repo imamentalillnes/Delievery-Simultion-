@@ -10,6 +10,8 @@ public class Main{
         //variables 
         File schedule = new File("train_schedule.txt");
         Scanner scnr = new Scanner(schedule);
+        double PerbyTruck = 0.75;
+        double PerbyDrone = 1 - PerbyTruck;
         int truckNums = 0;
         int truckStopped =0;
         int timer = 0;
@@ -27,7 +29,7 @@ public class Main{
         while(packages < 1500){
 
             // checks if the timer is divisible by 15
-            if(timer % 15 == 0 && prePackages < 1500){
+            if(timer % 15 == 0 && prePackages < (1500 * PerbyTruck)){
                 // makes new truck
                 compTrucks.add(new Truck(truckNums, timer));
                 truckNums++;
