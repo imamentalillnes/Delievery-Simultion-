@@ -1,9 +1,11 @@
 import java.io.*;
+import java.nio.channels.Pipe.SourceChannel;
 import java.util.*;
 
 public class Main{
 
     static ArrayList<Truck> compTrucks = new ArrayList<>();
+    static ArrayList<Drone> compDrones = new ArrayList<>();
 
     public static void main(String[] args) throws FileNotFoundException{
         
@@ -16,7 +18,8 @@ public class Main{
         int truckStopped =0;
         int timer = 0;
         int packages = 0;
-        int prePackages = 0;
+        int dronePackages = 0;
+        int truckPackages = 0;
         int trainsCrossing = 0;
         boolean trainpassing = false;
         boolean trucksDone = false;
@@ -28,12 +31,18 @@ public class Main{
         //main loop
         while(packages < 1500){
 
+            //checks if the timer is divisible by 3
+            if(timer % 3 == 0 && dronePackages < Math.ceil(1500 * PerbyDrone)){
+                compDrones.add(new Drone(timer));
+                dronePackages++;
+            }
+
             // checks if the timer is divisible by 15
-            if(timer % 15 == 0 && prePackages < (1500 * PerbyTruck)){
+            if(timer % 15 == 0 && truckPackages < Math.ceil(1500 * PerbyTruck)){
                 // makes new truck
                 compTrucks.add(new Truck(truckNums, timer));
                 truckNums++;
-                prePackages += 10;
+                truckPackages += 10;
             }
 
             // checks each truck to see when they pass the crossing
@@ -55,10 +64,19 @@ public class Main{
                 stoppedTrucks.remove(0).setUnStopped(timer);
             }
 
+            //searches through all the trucks to find the ones that are done
             for(Truck a : compTrucks){
                 if(a.getTimeDone() == timer){
                     a.setFinished();
                     packages += 10;
+                }
+            }
+
+            // Searches through all the drones for the ones that are done
+            for(Drone a : compDrones){
+                if(a.getDroneEnd() == timer){
+                    a.setFinished();
+                    packages += 1;
                 }
             }
 
@@ -97,6 +115,64 @@ public class Main{
         System.out.println("TRUCK STATS:");
         for(Truck a : compTrucks){
             System.out.println(a.toString());
+        }
+
+        //prints number of drones and Trucks
+        int trucks = 0;
+        for(Truck a : compTrucks){
+            trucks++;
+        }
+        int drones = 0;
+        for(Drone a : compDrones){
+            drones++;
+        }
+        System.out.println("Trucks used: " + trucks);
+        System.out.println("Drones used: " + drones);
+
+        // Prints train schedule
+        for(int i = 0; i < trainSch.size(); i++){
+            if(i % 2 == 0){
+                System.out.print("Train arrived at: " + trainSch.get(i));
+            }
+            else {
+                System.out.println(" | Train departed at:" + trainSch.get(i));
+            }
+        }
+
+        //Average truck Trip
+        int aveTrip = 0;
+        for(Truck a : compTrucks){
+            aveTrip += a.totalTime();
+        }
+        System.out.println("Average Trip Time for Trucks: " + (aveTrip/compTrucks.size()));
+
+        //Time all Trucks delievered Packages
+        int truckFin = 0;
+        for(Truck a : compTrucks){
+            if(truckFin < a.getTimeDone()){
+                truckFin = a.getTimeDone();
+            }
+        }
+        System.out.println("Trucks Finished at: " + truckFin);
+
+        //Drone trip Time Print
+        System.out.println("Average Trip Time for Drone: " + compDrones.get(0).totalTime());
+
+        //Time all Drones delievered Packages
+        int droneFin = 0;
+        for(Drone a : compDrones){
+            if(droneFin < a.getDroneEnd()){
+                droneFin = a.getDroneEnd();
+            }
+        }
+        System.out.println("Drones Finished at: " + droneFin);
+
+        //total time for all packages delievered
+        if(truckFin > droneFin){
+            System.out.println("All packages delievered by: " + truckFin);
+        }
+        else {
+            System.out.println("All packages delievered by: " + droneFin);
         }
     }
 
